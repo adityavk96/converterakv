@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaFilePdf, FaPlus } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa';
 import { PDFDocument } from 'pdf-lib';
 
 const PDFMerger = () => {
