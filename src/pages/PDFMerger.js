@@ -66,10 +66,10 @@ const PDFMerger = () => {
   };
 
   return (
-    <div className="merger-page py-16 px-4">
-      <section className="tool-section bg-white p-8 md:p-12 rounded-lg shadow-lg max-w-4xl mx-auto text-center">
-        <h2 className="text-4xl font-bold text-gray-900 mb-6">Effortlessly Merge Multiple PDFs</h2>
-        <div className="file-upload-area border-2 border-dashed border-gray-300 rounded-lg p-10 mb-6 hover:bg-gray-50 transition duration-300">
+    <div className="merger-page py-16 px-4 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 min-h-screen">
+      <section className="tool-section bg-white bg-opacity-20 p-8 md:p-12 rounded-lg shadow-lg max-w-4xl mx-auto text-center">
+        <h2 className="text-4xl font-bold text-white mb-6">Effortlessly Merge Multiple PDFs</h2>
+        <div className="file-upload-area border-2 border-dashed border-white rounded-lg p-10 mb-6 hover:bg-white hover:bg-opacity-30 transition duration-300">
           <input
             type="file"
             multiple
@@ -78,21 +78,18 @@ const PDFMerger = () => {
             className="hidden"
             id="pdf-upload"
           />
-          <label htmlFor="pdf-upload" className="cursor-pointer">
-            <div className="flex flex-col items-center">
-              <FaPlus className="text-gray-400 text-5xl mb-4" />
-              <p className="text-gray-600 font-medium">
-                Drag and drop your PDF files here, or{' '}
-                <span className="text-indigo-600 font-semibold">click to browse</span>.
-              </p>
-            </div>
+          <label htmlFor="pdf-upload" className="cursor-pointer flex flex-col items-center text-white">
+            <FaPlus className="text-white text-5xl mb-4" />
+            <p className="text-white font-medium">
+              Drag and drop your PDF files here, or{' '}
+              <span className="text-yellow-400 font-semibold underline">click to browse</span>.
+            </p>
           </label>
         </div>
 
         {files.length > 0 && (
-          <div className="file-list bg-gray-100 p-4 rounded-md mb-6">
-            {/* Display only number of files here */}
-            <p className="text-gray-800 font-semibold">Files to Merge: {files.length}</p>
+          <div className="file-list bg-white bg-opacity-40 p-4 rounded-md mb-6">
+            <p className="text-black font-semibold">Files to Merge: {files.length}</p>
           </div>
         )}
 
@@ -100,7 +97,7 @@ const PDFMerger = () => {
           <button
             onClick={handleMerge}
             className={`w-full md:w-auto font-bold py-3 px-12 rounded-lg shadow-md transition duration-300 ${
-              isMerging ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 transform hover:scale-105 text-white'
+              isMerging ? 'bg-gray-400 cursor-not-allowed text-gray-700' : 'bg-yellow-400 hover:bg-yellow-500 transform hover:scale-105 text-gray-900'
             }`}
             disabled={isMerging}
           >
@@ -108,10 +105,10 @@ const PDFMerger = () => {
           </button>
         ) : (
           <div className="flex flex-col items-center">
-            <p className="text-green-600 font-semibold mb-2">Merging Complete! ✅</p>
+            <p className="text-green-400 font-semibold mb-2">Merging Complete! ✅</p>
             <button
               onClick={handleDownload}
-              className="bg-green-600 text-white font-bold py-3 px-12 rounded-lg shadow-md hover:bg-green-700 transition duration-300 transform hover:scale-105"
+              className="bg-green-400 text-gray-900 font-bold py-3 px-12 rounded-lg shadow-md hover:bg-green-500 transition duration-300 transform hover:scale-105"
             >
               Download Merged PDF
             </button>
@@ -120,11 +117,11 @@ const PDFMerger = () => {
       </section>
 
       <section className="merger-benefits text-center py-12">
-        <h3 className="text-3xl font-bold text-gray-900 mb-8">Key Benefits of Our Merger</h3>
-        <ul className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto text-gray-700 text-lg">
-          <li className="bg-white p-6 rounded-lg shadow-md">Maintain original quality and formatting.</li>
-          <li className="bg-white p-6 rounded-lg shadow-md">Rearrange pages before merging.</li>
-          <li className="bg-white p-6 rounded-lg shadow-md">No file size limitations.</li>
+        <h3 className="text-3xl font-bold text-white mb-8">Key Benefits of Our Merger</h3>
+        <ul className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto text-white text-lg">
+          <li className="bg-white bg-opacity-20 p-6 rounded-lg shadow-md">Maintain original quality and formatting.</li>
+          <li className="bg-white bg-opacity-20 p-6 rounded-lg shadow-md">Rearrange pages before merging.</li>
+          <li className="bg-white bg-opacity-20 p-6 rounded-lg shadow-md">No file size limitations.</li>
         </ul>
       </section>
     </div>
