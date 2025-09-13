@@ -6,9 +6,7 @@ const Footer = () => {
       <div className="container mx-auto px-6 max-w-7xl text-center">
         <p>&copy; {new Date().getFullYear()} FileSwift. All rights reserved.</p>
         <div className="mt-4 flex justify-center space-x-6">
-          <a href="#" className="hover:text-white transition duration-300">Privacy Policy</a>
-          <a href="#" className="hover:text-white transition duration-300">Terms of Service</a>
-        </div>
+           </div>
       </div>
     </footer>
   );
