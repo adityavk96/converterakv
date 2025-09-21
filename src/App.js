@@ -4,8 +4,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './pages/Header';
 import Footer from './pages/Footer';
 import Main from './pages/main';
-import FileConverter from './pages/FileConverter';
+import ImageToPDF from './pages/ImageToPDF';
+import WordToPDF from './pages/WordToPDF';
 import PDFMerger from './pages/PDFMerger';
+import Reducefilesize from './pages/Reducefilesize';
 import Calculator from './pages/Calculator';
 
 function App() {
@@ -16,8 +18,10 @@ function App() {
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Main />} />
-            <Route path="/file-converter" element={<FileConverter />} />
+            <Route path="/image-to-pdf" element={<ImageToPDF />} />
+            <Route path="/word-to-pdf" element={<WordToPDF />} />
             <Route path="/pdf-merger" element={<PDFMerger />} />
+            <Route path="/reduce-file-size" element={<Reducefilesize />} />
             <Route path="/Calculator" element={<Calculator />} />
           </Routes>
         </main>

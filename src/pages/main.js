@@ -13,7 +13,7 @@ const Main = () => (
       </p>
       <div className="mt-8 flex justify-center space-x-4">
         <Link
-          to="/file-converter"
+          to="/"
           className="bg-yellow-400 text-gray-900 font-semibold py-3 px-8 rounded-full shadow hover:bg-yellow-500 transition"
         >
           Start Converting Now
