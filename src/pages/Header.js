@@ -27,7 +27,7 @@ const Header = () => {
           </li>
           <li>
             <Link to="/reduce-file-size" className="text-white hover:text-gray-200 font-medium transition duration-300">
-              Reduce File Size
+              Reduce PDF Size
             </Link>
           </li>
           <li>
