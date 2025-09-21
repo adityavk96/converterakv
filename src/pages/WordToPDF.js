@@ -2,35 +2,22 @@ import React, { useState } from 'react';
 import { FaUpload, FaFileWord } from 'react-icons/fa';
 import { saveAs } from 'file-saver';
 
-// Upload a single file and get PDF blob (used internally, shown for completeness)
-const convertWordToPdfLocal = async (file) => {
-  const formData = new FormData();
-  formData.append('file', file);
-  const response = await fetch('/api/convert-word', {
-    method: 'POST',
-    body: formData,
-  });
-  if (!response.ok) throw new Error('Conversion failed');
-  return await response.blob();
-};
-
-// Main component
 const WordToPDFPage = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [isMultipleFiles, setIsMultipleFiles] = useState(false);
+  const [isZipDownload, setIsZipDownload] = useState(false);
   const [isConverting, setIsConverting] = useState(false);
   const [convertedFile, setConvertedFile] = useState(null);
 
-  // Handle input file change
+  // Handle file input change
   const handleFileChange = (e) => {
     setSelectedFiles(Array.from(e.target.files));
     setConvertedFile(null);
   };
 
-  // Handle convert button click — upload all files at once with zip option
+  // Convert button logic: send all files as 'files' key to backend
   const handleConvert = async () => {
     if (selectedFiles.length === 0) {
-      alert('Please select at least one Word file first.');
+      alert('Please select at least one Word file.');
       return;
     }
 
@@ -38,9 +25,8 @@ const WordToPDFPage = () => {
 
     try {
       const formData = new FormData();
-      // Append all files under key 'files'
       selectedFiles.forEach((file) => formData.append('files', file));
-      formData.append('zip', isMultipleFiles ? 'true' : 'false');
+      formData.append('zip', isZipDownload ? 'true' : 'false');
 
       const response = await fetch('/api/convert-word', {
         method: 'POST',
@@ -50,16 +36,16 @@ const WordToPDFPage = () => {
       if (!response.ok) throw new Error('Conversion failed');
       const blob = await response.blob();
 
-      const fileName = isMultipleFiles ? 'converted.zip' : 'converted.pdf';
+      const fileName = isZipDownload ? 'converted_pdfs.zip' : 'converted.pdf';
 
       setConvertedFile({ blob, name: fileName });
-    } catch (error) {
-      alert('Conversion failed: ' + error.message);
+    } catch (err) {
+      alert('Conversion failed: ' + err.message);
     }
+
     setIsConverting(false);
   };
 
-  // Download the converted file
   const handleDownload = () => {
     if (convertedFile) {
       saveAs(convertedFile.blob, convertedFile.name);
@@ -75,11 +61,12 @@ const WordToPDFPage = () => {
         <div className="file-upload-area border-2 border-dashed border-white rounded-lg p-10 mb-6 hover:bg-white hover:bg-opacity-30 transition duration-300 cursor-pointer">
           <input
             type="file"
+            name="files"
+            multiple
+            accept=".doc,.docx"
             onChange={handleFileChange}
             className="hidden"
             id="file-upload"
-            accept=".doc,.docx"
-            multiple
           />
           <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center text-white">
             <FaUpload className="text-white text-5xl mb-4" />
@@ -102,8 +89,8 @@ const WordToPDFPage = () => {
           <label className="flex items-center cursor-pointer">
             <input
               type="checkbox"
-              checked={isMultipleFiles}
-              onChange={(e) => setIsMultipleFiles(e.target.checked)}
+              checked={isZipDownload}
+              onChange={(e) => setIsZipDownload(e.target.checked)}
               className="form-checkbox text-yellow-400 rounded-lg h-5 w-5"
             />
             <span className="ml-2 font-semibold">
