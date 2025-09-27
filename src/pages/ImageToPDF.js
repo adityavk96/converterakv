@@ -9,7 +9,7 @@ const fileToJPEGDataURL = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
-      const img = new Image();
+      const img = new window.Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
         canvas.width = img.width;
@@ -39,6 +39,7 @@ const ImageToPDFPage = () => {
     setConvertedFile(null);
   };
 
+  // Updated conversion logic that guarantees no image part is cut
   const handleConvert = async () => {
     if (selectedFiles.length === 0) {
       alert('Please select at least one image file first.');
@@ -53,9 +54,18 @@ const ImageToPDFPage = () => {
         for (const file of selectedFiles) {
           const pdf = new jsPDF();
           const { dataUrl, width, height } = await fileToJPEGDataURL(file);
+
           const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = (height * pdfWidth) / width;
-          pdf.addImage(dataUrl, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+          const pdfHeight = pdf.internal.pageSize.getHeight();
+
+          // Calculate scaling and centering
+          const scale = Math.min(pdfWidth / width, pdfHeight / height);
+          const imgWidth = width * scale;
+          const imgHeight = height * scale;
+          const x = (pdfWidth - imgWidth) / 2;
+          const y = (pdfHeight - imgHeight) / 2;
+
+          pdf.addImage(dataUrl, 'JPEG', x, y, imgWidth, imgHeight);
           const pdfBlob = pdf.output('blob');
           zip.file(file.name.replace(/\.[^/.]+$/, '') + '.pdf', pdfBlob);
         }
@@ -67,9 +77,16 @@ const ImageToPDFPage = () => {
         for (let i = 0; i < selectedFiles.length; i++) {
           const { dataUrl, width, height } = await fileToJPEGDataURL(selectedFiles[i]);
           const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = (height * pdfWidth) / width;
+          const pdfHeight = pdf.internal.pageSize.getHeight();
+
+          const scale = Math.min(pdfWidth / width, pdfHeight / height);
+          const imgWidth = width * scale;
+          const imgHeight = height * scale;
+          const x = (pdfWidth - imgWidth) / 2;
+          const y = (pdfHeight - imgHeight) / 2;
+
           if (i > 0) pdf.addPage();
-          pdf.addImage(dataUrl, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+          pdf.addImage(dataUrl, 'JPEG', x, y, imgWidth, imgHeight);
         }
         const pdfBlob = pdf.output('blob');
         setConvertedFile({ blob: pdfBlob, name: `images_${Date.now()}.pdf` });
