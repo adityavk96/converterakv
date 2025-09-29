@@ -4,7 +4,6 @@ import JSZip from 'jszip';
 import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
 
-// Helper to convert image file to JPEG data URL
 const fileToJPEGDataURL = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -35,11 +34,18 @@ const ImageToPDFPage = () => {
   const [convertedFile, setConvertedFile] = useState(null);
 
   const handleFileChange = (e) => {
-    setSelectedFiles(Array.from(e.target.files));
+    const files = Array.from(e.target.files);
+    setSelectedFiles(files);
     setConvertedFile(null);
+
+    // Optional: auto-enable separate PDFs checkbox if multiple files selected
+    if (files.length > 1) {
+      setIsMultipleFiles(true);
+    } else {
+      setIsMultipleFiles(false);
+    }
   };
 
-  // Updated conversion logic that guarantees no image part is cut
   const handleConvert = async () => {
     if (selectedFiles.length === 0) {
       alert('Please select at least one image file first.');
@@ -49,7 +55,7 @@ const ImageToPDFPage = () => {
 
     try {
       if (isMultipleFiles) {
-        // Separate PDF for each image, packaged in a ZIP
+        // Separate PDFs for each image in a ZIP
         const zip = new JSZip();
         for (const file of selectedFiles) {
           const pdf = new jsPDF();
@@ -58,7 +64,6 @@ const ImageToPDFPage = () => {
           const pdfWidth = pdf.internal.pageSize.getWidth();
           const pdfHeight = pdf.internal.pageSize.getHeight();
 
-          // Calculate scaling and centering
           const scale = Math.min(pdfWidth / width, pdfHeight / height);
           const imgWidth = width * scale;
           const imgHeight = height * scale;
@@ -72,7 +77,7 @@ const ImageToPDFPage = () => {
         const content = await zip.generateAsync({ type: 'blob' });
         setConvertedFile({ blob: content, name: 'converted_images.zip' });
       } else {
-        // All images merged into one PDF
+        // Single PDF merged from all images
         const pdf = new jsPDF();
         for (let i = 0; i < selectedFiles.length; i++) {
           const { dataUrl, width, height } = await fileToJPEGDataURL(selectedFiles[i]);
@@ -107,16 +112,19 @@ const ImageToPDFPage = () => {
     <div className="converter-page py-16 px-4 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 min-h-screen">
       <section className="tool-section bg-white bg-opacity-20 p-8 md:p-12 rounded-lg shadow-lg max-w-4xl mx-auto text-center">
         <h2 className="text-4xl font-bold text-white mb-6">Image to PDF Converter</h2>
-        <div className="file-upload-area border-2 border-dashed border-white rounded-lg p-10 mb-6 hover:bg-white hover:bg-opacity-30 transition duration-300 cursor-pointer">
+        <div
+          className="file-upload-area border-2 border-dashed border-white rounded-lg p-10 mb-6 hover:bg-white hover:bg-opacity-30 transition duration-300 cursor-pointer"
+          onClick={() => document.getElementById('file-upload').click()}
+        >
           <input
             type="file"
             onChange={handleFileChange}
-            className="hidden"
             id="file-upload"
             accept="image/*"
             multiple
+            style={{ display: 'none' }} // Use style instead of class hidden for better cross-browser
           />
-          <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center text-white">
+          <label className="cursor-pointer flex flex-col items-center text-white">
             <FaUpload className="text-white text-5xl mb-4" />
             <p className="font-medium">
               Drag and drop images here, or{' '}
